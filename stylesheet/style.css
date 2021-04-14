@@ -1,0 +1,121 @@
+.wrapper {
+    max-width: 1080px;
+    margin:0 auto;
+    padding: 2%;
+}
+
+.county-select {
+    width: 80%;
+    height: 40px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #f0eeee;
+    text-indent: 10px;
+    margin-bottom: 30px;
+}
+
+.reset-btn {
+    background-color: #e0dede;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    margin-right: 3%;
+}
+
+.reset-btn i {
+    color: #ffffff;
+    font-size: 18px;
+    line-height: 35px;
+    text-indent: 50%;
+}
+
+.select-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.cards {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    position: relative;
+    /* FIXME: */
+    /* background-color: #F0EFEB; */
+    width: 30%;
+    margin-right: 2.5%;
+    height: 150px;
+    margin-bottom: 25px;
+    border-radius: 5px;
+    border: 1px solid #b8b0b0;
+}
+
+.card-header {
+    border-bottom: 1px solid #b8b0b0;
+    padding: 10px;
+}
+
+.info-list > li {
+    padding-top: 7px;
+    padding-left: 10px;
+}
+
+.update-time {
+    font-size: 13px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: #575454;
+}
+
+.star-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #2a9d8f;
+}
+
+/* ===== 關注城市 ===== */
+
+.favorite-area {
+    width: 100%;
+    border-bottom: 1px solid #575454;
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+}
+
+.favorite-city-text {
+    font-size: 24px;
+    margin-bottom: 25px;
+}
+
+
+/* ========== AQI指數顏色區分 ========== */
+
+.status-aqi1 {
+    background-color: #C5DEDD;
+}
+
+.status-aqi2 {
+    background-color: #fff2a6;
+}
+
+  .status-aqi3 {
+    background-color: #f2cc8f;
+}
+
+  .status-aqi4 {
+    background-color: #e5989b;
+}
+
+.status-aqi5 {
+    background-color: #cdb4db;
+}
+
+.status-aqi6 {
+    background-color: #7c00179a;
+}
+

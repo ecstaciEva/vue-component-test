@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Homework</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="./stylesheet/reset.css">
+    <link rel="stylesheet" href="./stylesheet/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="./javascript/vendor.js"></script>
+</head>
+
+<body>
+
+    <div class="wrapper" id="app">
+
+        <a href="#" @click.prevent="reset()" class="reset-btn"><i class="fas fa-redo-alt"></i></a>
+        <select v-model="selected" class="county-select">
+            <option value="default" disabled> --- 請選擇 --- </option>
+            <option :value="item" v-for="item in counties">{{ item }}</option>
+        </select>
+
+        <div class="favorite-area" v-if="favoriteInfos.length !== 0">
+            <p class="favorite-city-text">關注城市</p>
+            <div class="cards">
+                <div is="card" @starbutton="switchFavoriteList" :card-data="item" v-for="(item,key) in favoriteInfos"
+                    :key="key"></div>
+            </div>
+        </div>
+
+
+        <h5 class="select-title">{{ selected === 'default' ? '所有城市' : selected }}</h5>
+        <div class="cards" v-if="rawData.length > 1">
+            <div is="card" @starbutton="switchFavoriteList" :card-data="item" v-for="(item,key) in filter" :key="key">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 卡片模板 -->
+    <script type="text/x-template" id="cardTemplate">
+        <div class="info-card" :class="aqiLevel">
+            <div class="card-header">
+                <p>{{ cardData.County }}-{{ cardData.SiteName }}</p>
+                <a href="#" @click.prevent="switchFavorite" class="star-btn">
+                    <i class="fa-star" :class="cardData.isFavorite ? 'fas': 'far' "></i>
+            </a>
+            </div>
+
+            <ul class="info-list">
+                <li>{{ cardData.id }}</li>
+                <li class="aqiLevel">AQI 指數：{{ cardData.AQI }}</li>
+                <li class="pm25">PM 2.5：{{ cardData["PM2.5"] }}</li>
+                <li class="others">說明：{{ cardData.Status }}</li>
+            </ul>
+
+            <p class="update-time">{{ cardData.PublishTime }}</p>
+        </div>
+    </script>
+
+    <!--  
+    <script type="text/x-template" id="cardTemplate">
+        <div class="info-card" :class="aqiLevel">
+            <div class="card-header">
+                <slot name="county"></slot> - <slot name="siteName"></slot>
+                <slot name="star-btn"></slot>
+            </div>
+
+            <ul class="info-list">
+                <li class="aqiLevel">AQI 指數：<slot name="aqiLevel"></slot></li>
+                <li class="pm25">PM 2.5：<slot name="pm25"></slot></li>
+                <li class="others">說明：<slot name="others"></slot></li>
+            </ul>
+
+            <p class="update-time"><slot name="publishTime"></slot></p>
+        </div>
+    </script>
+    -->
+
+    <!--  
+                <template slot="county">{{item.County}}</template>
+                <template slot="siteName">{{item.SiteName}}</template>
+                <template slot="star-btn"><a href="#" class="star-btn"><i class="fas fa-star"></i></a></template>
+                <template slot="aqiLevel">{{item.AQI}}</template>
+                <template slot="pm25">{{item["PM2.5"]}}</template>
+                <template slot="others">{{item.Status}}</template>
+                <template slot="publishTime">{{item.PublishTime}}</template>
+                -->
+
+    <script>
+        Vue.component('card', {
+            template: '#cardTemplate',
+            props: ['cardData'], // 每一個資料，而非整個 rawData
+            methods: {
+                switchFavorite: function () {
+                    this.$emit('starbutton', this.cardData);
+                },
+            },
+            computed: {
+                aqiLevel: function () {
+                    const level = parseInt(this.cardData.AQI);
+                    if (level >= 0 && level <= 50) {
+                        return "status-aqi1";
+                    } else if (level >= 51 && level <= 100) {
+                        return "status-aqi2";
+                    } else if (101 <= level && level <= 150) {
+                        return "status-aqi3";
+                    } else if (151 <= level && level <= 200) {
+                        return "status-aqi4";
+                    } else if (201 <= level && level <= 300) {
+                        return "status-aqi5";
+                    } else if (level > 300) {
+                        return "status-aqi6";
+                    }
+                },
+            }
+
+        })
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                selected: 'default',
+                counties: [],
+                rawData: [],
+                filterData: [],
+                favoriteInfos: JSON.parse(localStorage.getItem('favoriteInfos')) || [],
+            },
+            created() {
+                this.getData();
+            },
+            methods: {
+                getData: function () {
+
+                    const vm = this;
+                    const api = 'https://opendata2.epa.gov.tw/AQI.json';
+                    console.log('start');
+
+                    // 使用 jQuery ajax
+                    $.get(api).then(function (response) {
+                        vm.rawData = response;
+                        vm.rawData.forEach(info => {
+                            let favIndex;
+                            /* 
+                            1. 取得縣市列表。
+                            2. 先確認此筆資料是否在關注名單 favoriteInfos 裡：
+                            在名單中 => 把原先的 ID 還原、isFavorite: true。
+                            不在名單中 => 給它新的 ID、isFavorite: false。
+                            */
+
+                            // 篩選以取得縣市列表
+                            if (vm.counties.indexOf(info.County) === -1) {
+                                vm.counties.push(info.County);
+                            };
+
+                            // 確認資料是否在關注名單中
+                            let result = vm.favoriteInfos.find((favo, index) => {
+                                if (favo.SiteName === info.SiteName && favo.County === info.County) {
+                                    favIndex = index; // 取得在關注列表中的索引
+                                    return true;
+                                }
+                            });
+
+                            if (result !== undefined) {
+                                info.isFavorite = true;
+                                vm.favoriteInfos[favIndex] = info;
+                            } else {
+                                info.isFavorite = false;
+                            }
+                        });
+                    })
+
+                },
+                reset: function () {
+                    const vm = this;
+                    vm.selected = 'default';
+                },
+
+                switchFavoriteList: function (data) {
+                    const vm = this;
+                    const dataId = data.id;
+                    console.log(data);
+
+                    if (!data.isFavorite) {
+                        data.isFavorite = true;
+                        vm.favoriteInfos.push(data);
+                    } else {
+
+                        data.isFavorite = false;
+                        vm.favoriteInfos = vm.favoriteInfos.filter(item => item.isFavorite !== data.isFavorite);
+
+                    }
+
+                    localStorage.setItem('favoriteInfos', JSON.stringify(vm.favoriteInfos));
+                },
+
+
+            },
+            computed: {
+                filter: function () {
+                    const vm = this;
+                    if (vm.selected !== 'default') {
+
+                        vm.filterData = vm.rawData.filter(item => item.County === vm.selected);
+                        return vm.filterData;
+                    } else {
+                        return vm.rawData;
+                    }
+                }
+            },
+            // mounted: function () {
+            //     const vm = this;
+            //     window.addEventListener('beforeunload', () => {
+            //         localStorage.setItem('favoriteInfos', JSON.stringify(vm.favoriteInfos));
+            //     })
+            // }
+
+        })
+    </script>
+</body>
+
+</html>
