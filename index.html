@@ -61,35 +61,6 @@
         </div>
     </script>
 
-    <!--  
-    <script type="text/x-template" id="cardTemplate">
-        <div class="info-card" :class="aqiLevel">
-            <div class="card-header">
-                <slot name="county"></slot> - <slot name="siteName"></slot>
-                <slot name="star-btn"></slot>
-            </div>
-
-            <ul class="info-list">
-                <li class="aqiLevel">AQI 指數：<slot name="aqiLevel"></slot></li>
-                <li class="pm25">PM 2.5：<slot name="pm25"></slot></li>
-                <li class="others">說明：<slot name="others"></slot></li>
-            </ul>
-
-            <p class="update-time"><slot name="publishTime"></slot></p>
-        </div>
-    </script>
-    -->
-
-    <!--  
-                <template slot="county">{{item.County}}</template>
-                <template slot="siteName">{{item.SiteName}}</template>
-                <template slot="star-btn"><a href="#" class="star-btn"><i class="fas fa-star"></i></a></template>
-                <template slot="aqiLevel">{{item.AQI}}</template>
-                <template slot="pm25">{{item["PM2.5"]}}</template>
-                <template slot="others">{{item.Status}}</template>
-                <template slot="publishTime">{{item.PublishTime}}</template>
-                -->
-
     <script>
         Vue.component('card', {
             template: '#cardTemplate',
@@ -211,13 +182,6 @@
                     }
                 }
             },
-            // mounted: function () {
-            //     const vm = this;
-            //     window.addEventListener('beforeunload', () => {
-            //         localStorage.setItem('favoriteInfos', JSON.stringify(vm.favoriteInfos));
-            //     })
-            // }
-
         })
     </script>
 </body>
