@@ -1,7 +1,27 @@
 .wrapper {
     max-width: 1080px;
     margin:0 auto;
-    padding: 2%;
+    padding: 1%;
+}
+
+.todo-link-btn {
+    display: block;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 0;
+    background-color: #6b705c;
+    transition: all .1s;
+}
+
+.todo-link-btn:hover {
+    background-color:#b7b7a4;
+}
+
+.todo-link-btn > a {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .county-select {
