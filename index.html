@@ -114,7 +114,9 @@
                     // 使用 jQuery ajax
                     $.get(api).then(function (response) {
                         vm.rawData = response;
-                        vm.rawData.forEach(info => {
+                        // vm.rawData.forEach(info => {
+                        for (let i = 0; i < vm.rawData.length; i++) {
+
                             let favIndex;
                             /* 
                             1. 取得縣市列表。
@@ -124,26 +126,29 @@
                             */
 
                             // 篩選以取得縣市列表
-                            if (vm.counties.indexOf(info.County) === -1) {
-                                vm.counties.push(info.County);
+                            if (vm.counties.indexOf(vm.rawData[i].County) === -1) {
+                                vm.counties.push(vm.rawData[i].County);
                             };
 
                             // 確認資料是否在關注名單中
                             let result = vm.favoriteInfos.find((favo, index) => {
-                                if (favo.SiteName === info.SiteName && favo.County === info.County) {
+                                if (favo.SiteName === vm.rawData[i].SiteName && favo.County === vm.rawData[i].County) {
                                     favIndex = index; // 取得在關注列表中的索引
                                     return true;
                                 }
                             });
 
                             if (result !== undefined) {
-                                info.isFavorite = true;
+                                Vue.set(vm.rawData[i], 'isFavorite', true);
+                                // info.isFavorite = true;
                                 vm.favoriteInfos[favIndex] = info;
                             } else {
-                                info.isFavorite = false;
+                                // info.isFavorite = false;
+                                Vue.set(vm.rawData[i], 'isFavorite', false);
                             }
-                        });
+                        };
                     })
+                    console.log(this)
 
                 },
                 reset: function () {
@@ -160,10 +165,8 @@
                         data.isFavorite = true;
                         vm.favoriteInfos.push(data);
                     } else {
-
                         data.isFavorite = false;
                         vm.favoriteInfos = vm.favoriteInfos.filter(item => item.isFavorite !== data.isFavorite);
-
                     }
 
                     localStorage.setItem('favoriteInfos', JSON.stringify(vm.favoriteInfos));
