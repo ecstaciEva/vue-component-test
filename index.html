@@ -47,7 +47,7 @@
             <div class="card-header">
                 <p>{{ cardData.County }}-{{ cardData.SiteName }}</p>
                 <a href="#" @click.prevent="switchFavorite" class="star-btn">
-                    <i class="fa-star" :class="cardData.isFavorite ? 'fas': 'far' "></i>
+                    <i class="fa-star" :class="starStyle"></i>
             </a>
             </div>
 
@@ -88,6 +88,10 @@
                         return "status-aqi6";
                     }
                 },
+                starStyle: function () {
+                    const vm = this;
+                    return vm.cardData.isFavorite ? 'fas' : 'far';
+                }
             }
 
         })
@@ -146,7 +150,6 @@
                             }
                         };
                     })
-                    console.log(this)
 
                 },
                 reset: function () {
