@@ -140,10 +140,8 @@
 
                             if (result !== undefined) {
                                 Vue.set(vm.rawData[i], 'isFavorite', true);
-                                // info.isFavorite = true;
                                 vm.favoriteInfos[favIndex] = info;
                             } else {
-                                // info.isFavorite = false;
                                 Vue.set(vm.rawData[i], 'isFavorite', false);
                             }
                         };
