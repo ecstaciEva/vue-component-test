@@ -143,11 +143,11 @@
                             });
 
                             if (result !== undefined) {
-                                this.$set(vm.rawData[i], 'isFavorite', true);
+                                vm.$set(vm.rawData[i], 'isFavorite', true);
                                 vm.favoriteInfos[favIndex] = vm.rawData[i];
                             } else {
                                 // Vue.set(vm.rawData[i], 'isFavorite', false);
-                                this.$set(vm.rawData[i], 'isFavorite', false);
+                                vm.$set(vm.rawData[i], 'isFavorite', false);
                             }
                         };
                     })
