@@ -143,13 +143,16 @@
                             });
 
                             if (result !== undefined) {
-                                Vue.set(vm.rawData[i], 'isFavorite', true);
-                                vm.favoriteInfos[favIndex] = info;
+                                this.$set(vm.rawData[i], 'isFavorite', true);
+                                vm.favoriteInfos[favIndex] = vm.rawData[i];
                             } else {
-                                Vue.set(vm.rawData[i], 'isFavorite', false);
+                                // Vue.set(vm.rawData[i], 'isFavorite', false);
+                                this.$set(vm.rawData[i], 'isFavorite', false);
                             }
                         };
                     })
+
+                    console.log(this);
 
                 },
                 reset: function () {
@@ -160,7 +163,6 @@
                 switchFavoriteList: function (data) {
                     const vm = this;
                     const dataId = data.id;
-                    console.log(data);
 
                     if (!data.isFavorite) {
                         data.isFavorite = true;
